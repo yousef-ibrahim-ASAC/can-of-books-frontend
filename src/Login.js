@@ -4,8 +4,10 @@ import Card from 'react-bootstrap/Card';
 import './login.css';
 import LoginButton from './LoginButton';
 
+
 class Login extends React.Component {
   render() {
+   console.log(this.props.isAuthenticated);
     return(
       <Card style={{ width: '18rem' }}>
         <Card.Body>
@@ -15,10 +17,12 @@ class Login extends React.Component {
           </Card.Text>
           {/* TODO: add a `LoginButton` component here that will log the user in with Auth0 */}
           <LoginButton />
+  
         </Card.Body>
       </Card>
     )
   }
 }
+
 
 export default Login;
