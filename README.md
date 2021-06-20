@@ -82,10 +82,10 @@
 
 * Name of feature: User Authentication with Auth0
 
-* Estimate of time needed to complete: _____
+* Estimate of time needed to complete: 120min
 
-* Start time: _____
+* Start time: 2:00pm
 
-* Finish time: _____
+* Finish time: 6:00pm
 
-* Actual time needed to complete: _____
+* Actual time needed to complete: 240min
