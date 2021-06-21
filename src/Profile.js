@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
+import BestBooks from './componsnts/BestBooks';
 
 export class Profile extends Component {
 
@@ -26,11 +27,9 @@ export class Profile extends Component {
                             <Card.Img variant="top" src={this.state.userPicture} alt={this.state.userName} />
                             <Card.Body>
                                 <Card.Title>{this.state.userName}</Card.Title>
-                                <Card.Text>
-                                {this.state.userEmail}
-                                </Card.Text>
                             </Card.Body>
                         </Card>
+<BestBooks />
                     </Col>
                 ))}
             </Row>
