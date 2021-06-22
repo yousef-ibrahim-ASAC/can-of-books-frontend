@@ -22,7 +22,7 @@ class App extends React.Component {
     const { isAuthenticated } = this.props.auth0;
     // console.log(isAuthenticated); 
 
-    console.log('app', this.props)
+    // console.log('app', this.props)
     return (
       <>
         <Router>

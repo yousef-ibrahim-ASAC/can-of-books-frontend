@@ -16,7 +16,7 @@ class Books extends React.Component {
     }
 
     componentDidMount = () => {
-
+console.log(this.state.serverUrl);
         axios.get(`${this.state.serverUrl}/books?email=${this.state.userEmail}`).then(response => {
             // console.log(response);
             this.setState({
