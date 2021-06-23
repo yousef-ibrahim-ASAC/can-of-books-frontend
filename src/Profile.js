@@ -20,19 +20,22 @@ export class Profile extends Component {
 
     render() {
         return (
-            <Row xs={1} md={6} className="g-4">
-                {Array.from({ length: 1 }).map((_, idx) => (
-                    <Col>
-                        <Card>
-                            <Card.Img variant="top" src={this.state.userPicture} alt={this.state.userName} />
-                            <Card.Body>
-                                <Card.Title>{this.state.userName}</Card.Title>
-                            </Card.Body>
-                        </Card>
-<BestBooks />
-                    </Col>
-                ))}
-            </Row>
+            <div>
+                <Row xs={1} md={6} className="g-4">
+                    {Array.from({ length: 1 }).map((_, idx) => (
+                        <Col>
+                            <Card>
+                                <Card.Img variant="top" src={this.state.userPicture} alt={this.state.userName} />
+                                <Card.Body>
+                                    <Card.Title>{this.state.userName}</Card.Title>
+                                </Card.Body>
+                            </Card>
+
+                        </Col>
+                    ))}
+                </Row>
+                <BestBooks />
+            </div>
         )
     }
 }
