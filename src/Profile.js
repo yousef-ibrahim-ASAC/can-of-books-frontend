@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { withAuth0 } from "@auth0/auth0-react";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import BestBooks from './componsnts/BestBooks';
+
+
+
+
 
 export class Profile extends Component {
 
@@ -14,9 +17,10 @@ export class Profile extends Component {
         this.state = {
             userName: this.props.auth0.user.name,
             userEmail: this.props.auth0.user.email,
-            userPicture: this.props.auth0.user.picture
+            userPicture: this.props.auth0.user.picture,
         }
     }
+
 
     render() {
         return (
