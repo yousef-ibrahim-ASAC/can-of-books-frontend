@@ -3,6 +3,10 @@ import axios from 'axios';
 import { withAuth0 } from "@auth0/auth0-react";
 import Carousel from 'react-bootstrap/Carousel';
 import BookFormModal from './BookFormModal';
+// import UpdateForm from './UpdateForm';
+
+import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container';
 
 
 class Books extends React.Component {
@@ -15,9 +19,39 @@ class Books extends React.Component {
             bookName: '',
             description: '',
             status: '',
-            url: ''
+            url: '',
+            showModal: false,
+
+            // showUpdateForm: false,
+            // bookIndex: 0
         }
     }
+
+
+    handleModal = () => {
+        this.setState({
+            showModal: !this.state.showModal
+        })
+    }
+
+    // ************************************* Start Get *************************************
+    componentDidMount = () => {
+        console.log(this.state.serverUrl);
+        axios.get(`${this.state.serverUrl}/books?email=${this.state.userEmail}`).then(response => {
+            console.log(response);
+            this.setState({
+                booksData: response.data[0].books,
+            })
+            // console.log(this.state.booksData.length);
+        }).catch(
+            error => {
+                alert(error.message);
+            }
+        );
+    }
+
+    // ************************************* End Get *************************************
+
 
     // ************************************* Start POST *************************************
 
@@ -27,7 +61,7 @@ class Books extends React.Component {
     }
     updateBookdescribtion = (description) => {
         this.setState({ description });
-        console.log(this.state.description);
+        // console.log(this.state.description);
     }
     updateBookstatus = (status) => {
         this.setState({ status });
@@ -59,49 +93,83 @@ class Books extends React.Component {
             alert(error.message)
         )
 
+        this.handleModal();
     }
 
     // ************************************* End POST *************************************
 
-    // ************************************* Start Get *************************************
-    componentDidMount = () => {
-        console.log(this.state.serverUrl);
-        axios.get(`${this.state.serverUrl}/books?email=${this.state.userEmail}`).then(response => {
-            console.log(response);
-            this.setState({
-                booksData: response.data[0].books,
-            })
-            // console.log(this.state.booksData.length);
-        }).catch(
-            error => {
-                alert(error.message);
-            }
-        );
-    }
-
-    // ************************************* End Get *************************************
 
     // ************************************* Start Put *************************************
 
+    // to send a request for creating new data, we will be using the POST method
 
+    // updateMyBook = (e) => {
+    //     e.preventDefault();
+    //     const reqBody = {
+    //         booksData: this.state.catNameUpdate,
+    //         userEmail: this.state.userEmail
+    //     }
+
+
+    //     axios.put(`${this.state.serverUrl}/book/${this.state.bookIndex}`, reqBody).then(response => {
+    //         this.setState({
+    //             booksData: response.data.books
+    //         })
+    //     }).catch(error =>
+    //         alert(error.message)
+    //     )
+    // }
+
+
+    // handleModalPut = () => {
+    //     this.setState({
+    //         showUpdateForm: !this.state.showUpdateForm
+    //     })
+    // }
 
     // ************************************* End Put *************************************
+
+    // ************************************* Start Delete *************************************
+
+    deleteMyBook = (index) => {
+        // This function will be sending an axios request to the backend with the cat index to be deleted
+        // NOTE! when deleting items with axios, axios does not accept request body assignment
+        console.log(index);
+        axios.delete(`${this.state.serverUrl}/book/${index}?email=${this.state.userEmail}`).then(response => {
+            this.setState({
+                booksData: response.data.books,
+                // showUpdateForm: false
+            });
+            console.log(this.state.booksData);
+        }).catch(error =>
+            alert(error.message)
+        )
+    }
+
+    // ************************************* End Delete *************************************
 
 
     render() {
         return (
-            <>
+            <Container>
+
+                <div>
+                    <Button variant="success" size="lg" onClick={() => { this.handleModal() }}>Add Book</Button>
+                </div>
                 <BookFormModal
                     updateBookName={this.updateBookName}
                     updateBookdescribtion={this.updateBookdescribtion}
                     updateBookstatus={this.updateBookstatus}
                     updateBookurl={this.updateBookurl}
                     createMyBook={this.createMyBook}
+
+                    handleModal={this.handleModal}
+                    showModal={this.state.showModal}
                 />
                 {this.state.booksData.length &&
 
                     <Carousel id="carousel">{
-                        this.state.booksData.map(value => {
+                        this.state.booksData.map((value, index) => {
                             return (
                                 <Carousel.Item interval={1000}>
                                     <img
@@ -113,6 +181,8 @@ class Books extends React.Component {
                                         <h3>Name : {value.name}</h3>
                                         <p>Description : {value.description}</p>
                                         <p>Status: {value.status}</p>
+                                        {/* <Button onClick={e => this.props.showUpdateForm(value, index)} >Show Update Form</Button> */}
+                                        <Button variant="danger" onClick={e => this.deleteMyBook(index)} >Delete Book</Button>
                                     </Carousel.Caption>
                                 </Carousel.Item>
 
@@ -121,7 +191,7 @@ class Books extends React.Component {
                     }
                     </Carousel>
                 }
-            </>
+            </Container>
         )
     }
 }
