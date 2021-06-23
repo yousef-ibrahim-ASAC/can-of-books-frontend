@@ -3,7 +3,7 @@ import axios from 'axios';
 import { withAuth0 } from "@auth0/auth0-react";
 import Carousel from 'react-bootstrap/Carousel';
 import BookFormModal from './BookFormModal';
-// import UpdateForm from './UpdateForm';
+import UpdateForm from './UpdateForm';
 
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container';
@@ -22,8 +22,12 @@ class Books extends React.Component {
             url: '',
             showModal: false,
 
-            // showUpdateForm: false,
-            // bookIndex: 0
+            showUpdateForm: false,
+            bookNameUpdate: '',
+            descriptionUpdate: '',
+            statusUpdate: '',
+            urlUpdate: '',
+            bookIndex: 0
         }
     }
 
@@ -101,31 +105,72 @@ class Books extends React.Component {
 
     // ************************************* Start Put *************************************
 
+    // bookNameUpdate: '',
+    // descriptionUpdate: '',
+    // statusUpdate: '',
+    // urlUpdate: '',
+
+
+    updatebookNameUpdateForm = (Update) => this.setState({ bookNameUpdate: Update });
+    updatedescriptionUpdateForm = (Update) => this.setState({ descriptionUpdate: Update });
+    updatestatusUpdateForm = (Update) => this.setState({ statusUpdate: Update });
+    updateurlUpdateForm = (Update) => this.setState({ urlUpdate: Update });
+
+    UpdateForm = (booksObject, idx) => {
+        console.log(booksObject);
+        this.setState({
+            showUpdateForm: !this.state.showUpdateForm,
+            bookNameUpdate: booksObject.name,
+            descriptionUpdate: booksObject.description,
+            statusUpdate: booksObject.status,
+            urlUpdate: booksObject.url,
+            bookIndex: idx
+        })
+
+        console.log(this.state.showUpdateForm);
+        console.log(this.state.bookNameUpdate);
+        console.log(this.state.descriptionUpdate);
+    }
+
     // to send a request for creating new data, we will be using the POST method
 
-    // updateMyBook = (e) => {
-    //     e.preventDefault();
-    //     const reqBody = {
-    //         booksData: this.state.catNameUpdate,
-    //         userEmail: this.state.userEmail
-    //     }
+    updateMyBook = (e) => {
+
+        e.preventDefault();
+
+        const reqBody = {
+            bookName: this.state.bookNameUpdate,
+            description: this.state.descriptionUpdate,
+            status: this.state.statusUpdate,
+            url: this.state.urlUpdate,
+            email: this.state.userEmail
+        }
 
 
-    //     axios.put(`${this.state.serverUrl}/book/${this.state.bookIndex}`, reqBody).then(response => {
-    //         this.setState({
-    //             booksData: response.data.books
-    //         })
-    //     }).catch(error =>
-    //         alert(error.message)
-    //     )
-    // }
+        // axios.put(`${this.state.serverUrl}/book/${this.state.bookIndex}?email=${this.state.userEmail}&bookName=${this.state.bookNameUpdate}&description=${this.state.descriptionUpdate}&status=${this.state.statusUpdate}&url=${this.state.urlUpdate}`).then(response => {
+        //     this.setState({
+        //         booksData: response.data.books
+        //     })
+        // }).catch(error =>
+        //     alert(error.message)
+        // )
+
+        axios.put(`${this.state.serverUrl}/book/${this.state.bookIndex}`, reqBody).then(response => {
+            this.setState({
+                booksData: response.data.books
+            })
+        }).catch(error =>
+            alert(error.message)
+        )
+        this.handleModalPut();
+    }
 
 
-    // handleModalPut = () => {
-    //     this.setState({
-    //         showUpdateForm: !this.state.showUpdateForm
-    //     })
-    // }
+    handleModalPut = () => {
+        this.setState({
+            showUpdateForm: !this.state.showUpdateForm
+        })
+    }
 
     // ************************************* End Put *************************************
 
@@ -151,47 +196,68 @@ class Books extends React.Component {
 
     render() {
         return (
-            <Container>
+            <>
+                <Container>
 
-                <div>
-                    <Button variant="success" size="lg" onClick={() => { this.handleModal() }}>Add Book</Button>
-                </div>
-                <BookFormModal
-                    updateBookName={this.updateBookName}
-                    updateBookdescribtion={this.updateBookdescribtion}
-                    updateBookstatus={this.updateBookstatus}
-                    updateBookurl={this.updateBookurl}
-                    createMyBook={this.createMyBook}
+                    <div>
+                        <Button variant="success" size="lg" onClick={() => { this.handleModal() }}>Add Book</Button>
+                    </div>
+                    <BookFormModal
+                        updateBookName={this.updateBookName}
+                        updateBookdescribtion={this.updateBookdescribtion}
+                        updateBookstatus={this.updateBookstatus}
+                        updateBookurl={this.updateBookurl}
+                        createMyBook={this.createMyBook}
 
-                    handleModal={this.handleModal}
-                    showModal={this.state.showModal}
-                />
-                {this.state.booksData.length &&
+                        handleModal={this.handleModal}
+                        showModal={this.state.showModal}
+                    />
+                    {this.state.booksData.length &&
 
-                    <Carousel id="carousel">{
-                        this.state.booksData.map((value, index) => {
-                            return (
-                                <Carousel.Item interval={1000}>
-                                    <img
-                                        className="d-block w-100"
-                                        src={value.url}
-                                        alt={value.name}
-                                    />
-                                    <Carousel.Caption id="carouselCaption">
-                                        <h3>Name : {value.name}</h3>
-                                        <p>Description : {value.description}</p>
-                                        <p>Status: {value.status}</p>
-                                        {/* <Button onClick={e => this.props.showUpdateForm(value, index)} >Show Update Form</Button> */}
-                                        <Button variant="danger" onClick={e => this.deleteMyBook(index)} >Delete Book</Button>
-                                    </Carousel.Caption>
-                                </Carousel.Item>
+                        <Carousel id="carousel">{
+                            this.state.booksData.map((value, index) => {
+                                return (
+                                    <Carousel.Item interval={1000}>
+                                        <img
+                                            className="d-block w-100"
+                                            src={value.url}
+                                            alt={value.name}
+                                        />
+                                        <Carousel.Caption id="carouselCaption">
+                                            <h3>Name : {value.name}</h3>
+                                            <p>Description : {value.description}</p>
+                                            <p>Status: {value.status}</p>
+                                            <Button onClick={e => this.UpdateForm(value, index)} >Show Update Form</Button>
+                                            <Button variant="danger" onClick={e => this.deleteMyBook(index)} >Delete Book</Button>
+                                        </Carousel.Caption>
+                                    </Carousel.Item>
 
-                            )
-                        })
+                                )
+                            })
+                        }
+                        </Carousel>
                     }
-                    </Carousel>
+                </Container>
+                {
+                    this.state.showUpdateForm &&
+                    <UpdateForm
+
+                        updatebookNameUpdateForm={this.updatebookNameUpdateForm}
+                        updatedescriptionUpdateForm={this.updatedescriptionUpdateForm}
+                        updatestatusUpdateForm={this.updatestatusUpdateForm}
+                        updateurlUpdateForm={this.updateurlUpdateForm}
+
+                        bookNameUpdate={this.state.bookNameUpdate}
+                        descriptionUpdate={this.state.descriptionUpdate}
+                        statusUpdate={this.state.statusUpdate}
+                        urlUpdate={this.state.urlUpdate}
+
+                        updateMyBook={this.updateMyBook}
+                        showUpdateForm={this.state.showUpdateForm}
+                        handleModalPut={this.handleModalPut}
+                    />
                 }
-            </Container>
+            </>
         )
     }
 }
